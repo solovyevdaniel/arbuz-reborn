@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Building(models.Model):
     street = models.CharField(max_length=100)
     number = models.IntegerField()
@@ -9,8 +8,9 @@ class Building(models.Model):
     latitude = models.DecimalField(max_digits=19, decimal_places=15)
     quadkey = models.FloatField(db_index=True)
 
+
 class Crimes(models.Model):
-    building_id = models.ForeignKey(Building, related_name='building')
+    building_id = models.ForeignKey(Building, related_name='crimes')
     year_month = models.DateField(max_length=8)
     total = models.IntegerField(default=0)
     total_points = models.IntegerField(default=0)
