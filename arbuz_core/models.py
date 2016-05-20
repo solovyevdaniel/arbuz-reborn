@@ -55,9 +55,9 @@ class AdminUserManager(BaseUserManager):
 
 
 class AdminUser(AbstractUser):
-    user_email = models.EmailField(unique=True)
-    middle_name = models.CharField(max_length=256)
-    phone_number = models.CharField(max_length=52)
+    user_email = models.EmailField(unique=True, null=False, default='')
+    middle_name = models.CharField(max_length=256, null=False, default='')
+    phone_number = models.CharField(max_length=52, null=False, default='')
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     send_date = models.DateTimeField(default=timezone.now)
