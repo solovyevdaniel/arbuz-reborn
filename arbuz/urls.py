@@ -24,6 +24,7 @@ admin.sites.site = admin.site
 admin.autodiscover()
 
 urlpatterns = [
+    url(r'^admin/send_letter/', views.send_letter),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include('arbuz_core.urls')),

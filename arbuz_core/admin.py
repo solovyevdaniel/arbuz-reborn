@@ -11,4 +11,4 @@ admin.site.register(Building)
 admin.site.register(Crimes)
 admin.site.register(AdminUser)
 
-admin.site.register_view('send_letter', 'Send letter', view=views.send_letter)
+admin.site.register_view('send_letter', 'Send letter', view=views.get_send_letter_form)

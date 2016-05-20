@@ -34,14 +34,24 @@ class Crimes(models.Model):
 class AdminUserManager(BaseUserManager):
     def create_user(self, first_name=None, last_name=None, middle_name=None, phone_number=None,
                     user_email=None, password=None):
-        if not first_name or not last_name or not middle_name or not phone_number or not user_email:
-            raise ValueError("All fields are required")
+        if not user_email:
+            print "Fail"
+        print user_email
+        if not first_name:
+            first_name = ''
+        if not last_name:
+            last_name = ''
+        if not middle_name:
+            middle_name = ''
+        if not phone_number:
+            phone_number = ''
         user = self.model(
             phone_number=phone_number,
             first_name=first_name,
             last_name=last_name,
             middle_name=middle_name,
-            user_email=user_email
+            user_email=user_email,
+            is_staff=True
         )
         if password:
             user.set_password(password)
@@ -51,17 +61,40 @@ class AdminUserManager(BaseUserManager):
     def create_superuser(self, first_name=None, last_name=None, middle_name=None, phone_number=None,
                     user_email=None, password=None):
         user = self.create_user(first_name, last_name, middle_name, phone_number, user_email, password)
+        user.is_admin = True
+        user.save()
         return user
 
 
-class AdminUser(AbstractUser):
+class AdminUser(AbstractBaseUser):
+    id = models.AutoField(primary_key=True)
+    first_name = models.CharField(max_length=256, null=False, default='')
+    last_name = models.CharField(max_length=256, null=False, default='')
     user_email = models.EmailField(unique=True, null=False, default='')
     middle_name = models.CharField(max_length=256, null=False, default='')
     phone_number = models.CharField(max_length=52, null=False, default='')
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    send_date = models.DateTimeField(default=timezone.now)
+    start_date = models.DateTimeField(null=True)
+    end_date = models.DateTimeField(null=True)
+    is_activated = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
 
     objects = AdminUserManager()
 
     USERNAME_FIELD = 'user_email'
+
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def get_short_name(self):
+        return self.first_name
+
+    def get_full_name(self):
+        return self.first_name + ' ' + self.last_name + ' ' + self.middle_name
