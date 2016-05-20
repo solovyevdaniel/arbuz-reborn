@@ -1,54 +1,38 @@
 import json
-file_path = '../Data/01m_2013/data_01_2013_part1.json'
-string ='''
-[{
-    "street": "ПРОСП.   ПОБЕДЫ  буд",
-    "building": "94/1",
-    "location": [{"latitude": 50.459043, "longitude": 30.39884, "__type": "GeoPoint"}],
-    "total": 2,
-    "heav_osobo_heav": 0,
-    "murder": 0,
-    "intentional_injury": 0,
-    "bodily_harm_with_fatal_cons": 0,
-    "rape": 0,
-    "theft": 1,
-    "looting": 0,
-    "brigandage": 0,
-    "extortion": 0,
-    "fraud": 0,
-    "hooliganism": 0,
-    "drugs": 0,
-    "total_points": 1,
-    "month": 1,
-    "year": 2013
-},
-{
-    "street": "ПРОСП.   ПОБЕДЫ  буд",
-    "building": "94/1",
-    "location": [{"latitude": 50.459043, "longitude": 30.39884, "__type": "GeoPoint"}],
-    "total": 2,
-    "heav_osobo_heav": 0,
-    "murder": 0,
-    "intentional_injury": 0,
-    "bodily_harm_with_fatal_cons": 0,
-    "rape": 0,
-    "theft": 1,
-    "looting": 0,
-    "brigandage": 0,
-    "extortion": 0,
-    "fraud": 0,
-    "hooliganism": 0,
-    "drugs": 0,
-    "total_points": 1,
-    "month": 1,
-    "year": 2014
-}]
-'''
+from arbuz_core.models import Building, Crimes
+from datetime import datetime
+
+
+# file_path = './Data/01m_2013/data_01_2013_part2.json'
+file_path = ''
 
 def read_from_file():
     with open(file_path) as f:
         data = json.load(f)
-        print(data)
+        print(len(data))
+        for d in range(len(data)):
+            building = Building(street=data[d]['street'],
+                                number=data[d]['building'],
+                                latitude=data[d]['location'][0]['latitude'],
+                                longitude=data[d]['location'][0]['longitude'])
+            building.save()
 
-
-read_from_file()
+            get_building = Building.objects.filter(street=data[d]['street']).get(number=data[d]['building'])
+            crimes = Crimes(building_id=get_building,
+                            year_month=datetime.strptime('01-{}-{}'.format(data[d]['month'], data[d]['year']), "%d-%m-%Y"),
+                            total=data[d]['total'],
+                            total_points=data[d]['total_points'],
+                            bodily_harm_with_fatal_cons=data[d]['bodily_harm_with_fatal_cons'],
+                            brigandage=data[d]['brigandage'],
+                            drugs=data[d]['drugs'],
+                            extortion=data[d]['extortion'],
+                            fraud=data[d]['fraud'],
+                            grave_and_very_grave=data[d]['heav_osobo_heav'],
+                            hooliganism=data[d]['hooliganism'],
+                            intentional_injury=data[d]['intentional_injury'],
+                            looting=data[d]['looting'],
+                            murder=data[d]['murder'],
+                            rape=data[d]['rape'],
+                            theft=data[d]['theft'])
+            crimes.save(force_insert=True)
+    return data
