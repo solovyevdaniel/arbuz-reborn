@@ -18,6 +18,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from arbuz_core import views
+from arbuz_core import urls as core_urls
 
 admin.site = AdminSitePlus()
 admin.sites.site = admin.site
@@ -29,3 +30,4 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include('arbuz_core.urls')),
 ]
+

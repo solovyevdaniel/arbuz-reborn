@@ -94,3 +94,7 @@ def dump(request):
     response = Building.objects.all()
 
     return render_to_response('main.html', {'response': response})
+
+
+def index_view(request):
+    return render_to_response('index.html')
