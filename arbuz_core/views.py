@@ -9,9 +9,11 @@ from email.mime.text import MIMEText
 from django.shortcuts import render, render_to_response, redirect
 from rest_framework import status
 from rest_framework.decorators import api_view
+from django.shortcuts import render_to_response
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
+from .data import read_from_file
 from .serializers import BuildingSerializer, CrimesSerializer
 from .models import Building, Crimes
 
@@ -86,3 +88,9 @@ def send_letter(request):
 @api_view(['GET'])
 def get_send_letter_form(request):
     return render(request, 'send_letter.html')
+
+def dump(request):
+    # read_from_file()
+    response = Building.objects.all()
+
+    return render_to_response('main.html', {'response': response})

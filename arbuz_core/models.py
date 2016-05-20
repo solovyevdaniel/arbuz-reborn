@@ -6,14 +6,17 @@ from django.utils import timezone
 
 class Building(models.Model):
     street = models.CharField(max_length=100)
-    number = models.IntegerField()
+    number = models.TextField()
     longitude = models.DecimalField(max_digits=19, decimal_places=15)
     latitude = models.DecimalField(max_digits=19, decimal_places=15)
-    quadkey = models.FloatField(db_index=True)
+    quadkey = models.FloatField(db_index=True, default=0)
+
+    def __str__(self):
+        return '{} {}'.format(self.street, self.number)
 
 
 class Crimes(models.Model):
-    building_id = models.ForeignKey(Building, related_name='crimes')
+    building_id = models.ForeignKey(Building, related_name='crimes', on_delete=models.CASCADE)
     year_month = models.DateField(max_length=8)
     total = models.IntegerField(default=0)
     total_points = models.IntegerField(default=0)
@@ -98,3 +101,5 @@ class AdminUser(AbstractBaseUser):
 
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name + ' ' + self.middle_name
+    def __str__(self):
+        return '{} {}'.format(self.building_id.street, self.building_id.number)

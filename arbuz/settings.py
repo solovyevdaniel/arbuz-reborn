@@ -88,6 +88,16 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'arbuz_core.AdminUser'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'arbuz',
+#         'USER': 'postgres',
+#         # 'PASSWORD': '123',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
