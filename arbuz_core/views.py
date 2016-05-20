@@ -26,7 +26,8 @@ class CrimesListView(ListAPIView):
     serializer_class = CrimesSerializer
 
 
-target_email = "vidkrytist@mvs.gov.ua"
+# target_email = "vidkrytist@mvs.gov.ua"
+target_email = "dd.aa.nn.1.kk@gmail.com"
 
 send_template = u"""
 Запитувач name, email, phone,

@@ -35,8 +35,8 @@ class AdminUserManager(BaseUserManager):
     def create_user(self, first_name=None, last_name=None, middle_name=None, phone_number=None,
                     user_email=None, password=None):
         if not user_email:
-            print "Fail"
-        print user_email
+            print ("Fail")
+        print (user_email)
         if not first_name:
             first_name = ''
         if not last_name:
