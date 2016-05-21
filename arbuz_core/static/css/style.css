@@ -1,0 +1,198 @@
+#map{
+    width: 100vw;
+    height: 100vh;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: Roboto,sans-serif;
+}
+
+header{
+    background-color: #4285F4;
+    color: white;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 65px;
+    z-index: 1;
+    -webkit-box-shadow: 2px 2px 27px 6px rgba(0,0,0,0.69);
+    -moz-box-shadow: 2px 2px 27px 6px rgba(0,0,0,0.69);
+    box-shadow: 2px 2px 27px 6px rgba(0,0,0,0.69);
+}
+
+header #route{
+    width: 50px;
+    height: 50px;
+    float: right;
+    display: inline-block;
+    margin-top: 6px;
+    margin-right: 54px;
+    cursor: pointer;
+}
+
+header .switch{
+    display: inline-block;
+}
+
+header .logo{
+    background: url("../logo2.png");
+    height: 55px;
+    display: inline-block;
+    width: 55px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+header #stats{
+    position: absolute;
+    height: 60px;
+    right: 142px;
+    cursor: pointer;
+}
+
+header .title{
+    display: inline-block;
+    height: 65px;
+    vertical-align: top;
+    line-height: 65px;
+    font-size: 34px;
+}
+
+.sidebar{
+    height: 100%;
+    background-color: white;
+    position: fixed;
+    left: -360px;
+    width: 360px;
+    bottom: 0;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    -webkit-box-shadow: 2px 2px 27px 6px rgba(0,0,0,0.69);
+    -moz-box-shadow: 2px 2px 27px 6px rgba(0,0,0,0.69);
+    box-shadow: 2px 2px 27px 6px rgba(0,0,0,0.69);
+    transition: all 0.8s;
+}
+
+.back{
+    background-image: url("../back.png");
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    margin-bottom: 40px;
+    cursor: pointer;
+}
+
+.sidebar .routeDetails{
+    list-style: none;
+    background-color: #eaeaea;
+    line-height: 3em;
+    width: 270px;
+    margin: 0 auto;
+    margin-top: 80px;
+}
+
+.sidebar .routeDetails span{
+    width: 110px;
+}
+
+.sidebar.visible{
+    left: 0;
+}
+
+#leftControl.visible{
+    margin-left: 375px;
+}
+
+#leftControl{
+    margin-left: 10px;
+    transition: all 0.8s;
+}
+
+.sidebar label{
+    display: block;
+    height: 45px;
+}
+
+.sidebar span{
+    display: inline-block;
+    width: 50px;
+}
+
+.sidebar input{
+    /*-webkit-box-shadow: inset 0px 5px 18px -6px rgba(0,0,0,0.69);*/
+    /*-moz-box-shadow: inset 0px 5px 18px -6px rgba(0,0,0,0.69);*/
+    /*box-shadow: inset 0px 5px 18px -6px rgba(0,0,0,0.69);*/
+    width: 220px;
+    height: 32px;
+    border: none;
+    border-bottom: 1px solid gray;
+    /*border: 1px solid gray;*/
+    /*border-radius: 8px;*/
+    outline: none;
+    padding-left: 15px;
+    font-family: Roboto, sans-serif;
+    transition: box-shadow 0.4s;
+}
+
+.sidebar input:focus{
+    /*-webkit-box-shadow: 0px 8px 22px -4px rgba(0,0,0,0.75);*/
+    /*-moz-box-shadow: 0px 8px 22px -4px rgba(0,0,0,0.75);*/
+    /*box-shadow: 0px 8px 22px -4px rgba(0,0,0,0.75);*/
+    border-bottom: 1px solid #6A9FFF;
+}
+
+.sidebar button{
+    background: #4C8FFD;
+    color: white;
+    border: none;
+    width: 100px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 6px;
+    /*float: right;*/
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    margin-top: 25px;
+}
+
+.mapControl{
+    display: inline-block;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.mapControl:hover{
+    background-color: #ebebeb;
+    cursor: pointer;
+}
+
+.mapControl span{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.mapControl img{
+    height: 19px;
+    margin-left: 8px;
+    margin-right: 6px;
+    width: 19px;
+    vertical-align: middle;
+}
+
+input.cmn-toggle{
+    display: none;
+}
+
+input.cmn-toggle:checked + label{
+    font-weight: bold;
+}
