@@ -33,6 +33,9 @@ class Crimes(models.Model):
     rape = models.IntegerField(default=0)
     theft = models.IntegerField(default=0)
 
+    def __str__(self):
+        return '{} {}'.format(self.crimes.street, self.crimes.number)
+
 
 class AdminUserManager(BaseUserManager):
     def create_user(self, first_name=None, last_name=None, middle_name=None, phone_number=None,
@@ -102,5 +105,5 @@ class AdminUser(AbstractBaseUser):
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name + ' ' + self.middle_name
 
-    def __str__(self):
-        return '{} {}'.format(self.building_id.street, self.building_id.number)
+    # def __str__(self):
+    #     return '{} {}'.format(self.crimes.street, self.crimes.number)

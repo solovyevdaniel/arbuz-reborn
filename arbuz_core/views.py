@@ -19,7 +19,8 @@ from .models import Building, Crimes
 
 
 class BuildingListView(ListAPIView):
-    queryset = Building.objects.all()
+    queryset = Building.objects.exclude(crimes__total=0)
+    # queryset = Crimes.objects.exclude(total=0).select_related('building_id')
     serializer_class = BuildingSerializer
 
 

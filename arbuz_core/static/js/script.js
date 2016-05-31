@@ -5,7 +5,7 @@ var data = [];
 
 var currMap = {};
 
-var map, heatmap, markers, directionsService, directionsDisplay, query, CrimeList;
+var map, heatmap, markers, directionsService, directionsDisplay, query, CrimeList, mc;
 
 function CenterControl(controlDiv, map) {
 
@@ -33,13 +33,13 @@ function CenterControl(controlDiv, map) {
     controlText.webkitUserSelect = "none";
     controlText.MozUserSelect = "none";
     controlText.innerHTML =
-        '<input id="turnOnMarker" class="cmn-toggle" type="radio" name="mapeType" checked>'+
-        '<label for="turnOnMarker" onclick="toggleMap()" class="mapControl">'+
-        '<span>Маркери</span>'+
-        '</label>'+
-        '<input id="turnOnHeatmap" class="cmn-toggle" type="radio" name="mapeType">'+
-        '<label for="turnOnHeatmap" onclick="toggleMap()" class="mapControl">'+
-        '<span">Градієнт</span>'+
+        '<input id="turnOnMarker" class="cmn-toggle" type="radio" name="mapeType" checked>' +
+        '<label for="turnOnMarker" onclick="turnOnMarkers();turnOffHeatmap()" class="mapControl">' +
+        '<span>Маркери</span>' +
+        '</label>' +
+        '<input id="turnOnHeatmap" class="cmn-toggle" type="radio" name="mapeType">' +
+        '<label for="turnOnHeatmap" onclick="turnOnHeatmap();turnOffMarkers()" class="mapControl">' +
+        '<span">Градієнт</span>' +
         '</label>';
     controlUI.appendChild(controlText);
 
@@ -47,7 +47,7 @@ function CenterControl(controlDiv, map) {
 
 }
 
-function LeftControl (controlDiv, map){
+function LeftControl(controlDiv, map) {
     var controlUI = document.createElement('div');
     controlUI.style.backgroundColor = '#fff';
     controlUI.style.borderRadius = '3px';
@@ -71,11 +71,11 @@ function LeftControl (controlDiv, map){
     controlText.webkitUserSelect = "none";
     controlText.MozUserSelect = "none";
     controlText.innerHTML =
-        '<label onclick="" class="mapControl">'+
-        '<span><img src="/static/glyphicons-42-charts.png" /></span>'+
-        '</label>'+
-        '<label onclick="toggleSidebar()" class="mapControl">'+
-        '<span><img src="/static/office2.png" /></span>'+
+        '<label onclick="" class="mapControl">' +
+        '<span><img src="/static/glyphicons-42-charts.png" /></span>' +
+        '</label>' +
+        '<label onclick="toggleSidebar()" class="mapControl">' +
+        '<span><img src="/static/office2.png" /></span>' +
         '</label>';
     controlUI.appendChild(controlText);
 }
@@ -118,11 +118,11 @@ function initMap() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(leftControlDiv);
 
 
-    // CrimeList = Parse.Object.extend("streets"); // pis'ka
+    // CrimeList = Parse.Object.extend("streets");
     // query = new Parse.Query(CrimeList);
     // query.equalTo('month', 3);
     //query.equalTo('total_points', 0);
-    // var offset = 0;
+    var offset = 0;
 
     // var interval = setInterval(function () {
     //     query.skip(offset);
@@ -155,8 +155,14 @@ function initMap() {
     //         }
     //     });
     // }, 1000);
-    
-    $.getJSON('buildings', function (buildings){
+
+    $.getJSON('buildings', function (buildings) {
+        for (var i = 0; i < buildings.length; i++) {
+            if (buildings[i].crimes[0].total == 0 || buildings[i].crimes[0].total_points == 0){
+                buildings.splice(i, 1);
+                i--;
+            }
+        }
         data = buildings;
         heatmap.setData(getPoints());
         for (var i = 0; i < data.length; i++) {
@@ -164,25 +170,33 @@ function initMap() {
                 position: new google.maps.LatLng(data[i].latitude, data[i].longitude),
                 map: currMap
             }));
-            markers[markers.length - 1].addListener('click', function () {
-                var infowindow = new google.maps.InfoWindow({
-                    content: getContentString(data[i]),
-                    maxWidth: 200
+            (function (building) {
+                markers[markers.length - 1].addListener('click', function () {
+                    var infowindow = new google.maps.InfoWindow({
+                        content: getContentString(building.crimes[0]),
+                        maxWidth: 200
+                    });
+                    infowindow.open(map, this)
                 });
-                infowindow.open(map, this);
-            });
+            })(data[i]);
         }
+        mc = new MarkerClusterer(currMap, markers,
+            {
+                maxZoom: 13,
+                gridSize: 50,
+                styles: null
+            });
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
-       var myLatLng = event.latLng;
-       console.log(myLatLng.lat(), myLatLng.lng());
-       console.log(map.getZoom());
-       // markers.push(new google.maps.Marker({
-       //     position: new google.maps.LatLng(myLatLng.lat(), myLatLng.lng()),
-       //     map: map,
-       //     icon: 'http://gmapsmarkergenerator.eu01.aws.af.cm/getmarker?scale=1&color=ffff00'
-       // }));
+        var myLatLng = event.latLng;
+        console.log(myLatLng.lat(), myLatLng.lng());
+        console.log(map.getZoom());
+        // markers.push(new google.maps.Marker({
+        //     position: new google.maps.LatLng(myLatLng.lat(), myLatLng.lng()),
+        //     map: map,
+        //     icon: 'http://gmapsmarkergenerator.eu01.aws.af.cm/getmarker?scale=1&color=ffff00'
+        // }));
     });
 
     markers = [];
@@ -190,21 +204,21 @@ function initMap() {
     turnOffHeatmap();
 }
 
-function getContentString (crime){
-    var str = '<ul style="list-style: none">'+
-        (crime.heav_osobo_heav>0?'<li><span>Тяжкі та о.тяжкі:</span><span>'+crime.heav_osobo_heav+'</span></li>':'')+
-        (crime.murder>0?'<li><span>Вбивства:</span><span>'+crime.murder+'</span></li>':'')+
-        (crime.intentional_injury>0?'<li><span>Умисне тяж тіл ушкодження:</span><span>'+crime.intentional_injury+'</span></li>':'')+
-        (crime.bodily_harm_with_fatal_cons>0?'<li><span>Тяж тіл ушкодж зі смерт. насл:</span><span>'+crime.bodily_harm_with_fatal_cons+'</span></li>':'')+
-        (crime.rape>0?'<li><span>Згвалтування:</span><span>'+crime.rape+'</span></li>':'')+
-        (crime.theft>0?'<li><span>Крадіжка:</span><span>'+crime.theft+'</span></li>':'')+
-        (crime.looting>0?'<li><span>Грабіж:</span><span>'+crime.looting+'</span></li>':'')+
-        (crime.brigandage>0?'<li><span>Розбій:</span><span>'+crime.brigandage+'</span></li>':'')+
-        (crime.extortion>0?'<li><span>Вимагання:</span><span>'+crime.extortion+'</span></li>':'')+
-        (crime.fraud>0?'<li><span>Шахрайство:</span><span>'+crime.fraud+'</span></li>':'')+
-        (crime.hooliganism>0?'<li><span>Хулігантство:</span><span>'+crime.hooliganism+'</span></li>':'')+
-        (crime.drugs>0?'<li><span>Наркотики:</span><span>'+crime.drugs+'</span></li>':'')+
-            '</ul>'
+function getContentString(crime) {
+    var str = '<ul style="list-style: none">' +
+        (crime.heav_osobo_heav > 0 ? '<li><span>Тяжкі та о.тяжкі:</span><span>' + crime.heav_osobo_heav + '</span></li>' : '') +
+        (crime.murder > 0 ? '<li><span>Вбивства:</span><span>' + crime.murder + '</span></li>' : '') +
+        (crime.intentional_injury > 0 ? '<li><span>Умисне тяж тіл ушкодження:</span><span>' + crime.intentional_injury + '</span></li>' : '') +
+        (crime.bodily_harm_with_fatal_cons > 0 ? '<li><span>Тяж тіл ушкодж зі смерт. насл:</span><span>' + crime.bodily_harm_with_fatal_cons + '</span></li>' : '') +
+        (crime.rape > 0 ? '<li><span>Згвалтування:</span><span>' + crime.rape + '</span></li>' : '') +
+        (crime.theft > 0 ? '<li><span>Крадіжка:</span><span>' + crime.theft + '</span></li>' : '') +
+        (crime.looting > 0 ? '<li><span>Грабіж:</span><span>' + crime.looting + '</span></li>' : '') +
+        (crime.brigandage > 0 ? '<li><span>Розбій:</span><span>' + crime.brigandage + '</span></li>' : '') +
+        (crime.extortion > 0 ? '<li><span>Вимагання:</span><span>' + crime.extortion + '</span></li>' : '') +
+        (crime.fraud > 0 ? '<li><span>Шахрайство:</span><span>' + crime.fraud + '</span></li>' : '') +
+        (crime.hooliganism > 0 ? '<li><span>Хулігантство:</span><span>' + crime.hooliganism + '</span></li>' : '') +
+        (crime.drugs > 0 ? '<li><span>Наркотики:</span><span>' + crime.drugs + '</span></li>' : '') +
+        '</ul>'
     return str;
 }
 
@@ -233,7 +247,7 @@ function calcRoute() {
 function findSafeRoute(routes) {
     var ratings = [];
     for (var i = 0; i < routes.length; i++) {
-        ratings[i] = getSafeRating(routes[i].overview_path)/routes[i].legs[0].distance.value*100;
+        ratings[i] = getSafeRating(routes[i].overview_path) / routes[i].legs[0].distance.value * 100;
     }
     var min = Number.MAX_VALUE;
     var min_route;
@@ -287,7 +301,7 @@ function getSafeRating(points) {
 function toggleMap() {
     currMap = currMap ? null : map;
     //setTimeout(function () {
-        toggleHeatmap();
+    toggleHeatmap();
     //}, 0);
     toggleMarkers();
 }
@@ -318,21 +332,21 @@ function getPoints() {
 }
 
 function toggleMarkers() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(markers[i].getMap() ? null : map);
+    if (mc.getMarkers().length){
+        mc.clearMarkers();
+    } else {
+        mc.addMarkers(markers);
     }
 }
 
 function turnOnMarkers() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
+    if (mc && mc.getMarkers().length == 0){
+        mc.addMarkers(markers);
     }
 }
 
 function turnOffMarkers() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-    }
+    mc.clearMarkers();
 }
 
 function turnOnHeatmap() {
