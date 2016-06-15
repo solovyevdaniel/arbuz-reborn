@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Send letter</title>
-</head>
-<body>
-    <form action="send_letter/" method="post">{% csrf_token %}
+{% extends 'admin/base_site.html' %}
+{% block title %}{{ title }} | Send Letter{% endblock %}
+{% block messages %}
+    <form id="send_form" action="send_letter/" method="post">{% csrf_token %}
         <p>First Name</p>
         <label>
             <input name="first_name" type="text"/>
@@ -30,16 +26,7 @@
         <label>
             <input name="end_date" type="date"/>
         </label>
-        <p>Sender Email</p>
-        <label>
-            <input name="email" type="email"/>
-        </label>
-        <p>Password</p>
-        <label>
-            <input name="password" type="password"/>
-        </label>
         <br />
-        <input value="Send letter" type="submit" />
+        <input id="send_submit" value="Send letter" type="submit" />
     </form>
-</body>
-</html>
+{% endblock %}

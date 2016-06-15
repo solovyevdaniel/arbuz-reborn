@@ -28,6 +28,9 @@ class CrimesListView(ListAPIView):
 
 target_email = "vidkrytist@mvs.gov.ua"
 
+base_email = "letter.author.name@gmail.com"
+password = "azaza00754lol"
+
 send_template = u"""
 Запитувач name, email, phone,
 Прошу інформацію відповідно до Закону України "Про доступ до публічної інформації" надати дані про правопорушення,
@@ -54,7 +57,7 @@ def send_letter(request):
 
     name = user.last_name + " " + user.first_name + " " +\
         user.middle_name
-    email = data['email']
+    email = base_email
     phone = user.phone_number
     start_date = user.start_date
     end_date = user.end_date
@@ -64,7 +67,6 @@ def send_letter(request):
         .replace('phone', phone).replace('start', str(start_date)).replace('end', str(end_date))
     letter += send_date
 
-    password = data['password']
     msg = MIMEMultipart('alternative')
     h = Header('Subject', 'utf-8')
     msg['Subject'] = h

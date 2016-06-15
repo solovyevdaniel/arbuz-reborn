@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | Arbuz Reborn{% endblock %}
+
+{% block extrastyle %}
+    <style>
+        #header {
+            background-color: #058BCC;
+        }
+        #send_form {
+            margin: 25px 50px;
+        }
+        #send_submit {
+            margin-top: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Arbuz Reborn</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
