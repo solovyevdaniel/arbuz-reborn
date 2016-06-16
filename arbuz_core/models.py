@@ -30,6 +30,12 @@ class Crimes(models.Model):
     rape = models.IntegerField(default=0)
     theft = models.IntegerField(default=0)
 
+    def get_crimes_total_count(self):
+        result = self.bodily_harm_with_fatal_cons + self.brigandage + self.drugs + self.extortion +\
+            self.fraud + self.grave_and_very_grave + self.hooliganism + self.intentional_injury + self.looting +\
+            self.murder + self.rape + self.theft
+        return result
+
 
 class AdminUserManager(BaseUserManager):
     def create_user(self, first_name=None, last_name=None, middle_name=None, phone_number=None,
