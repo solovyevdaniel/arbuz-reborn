@@ -17,7 +17,7 @@ from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
-from .serializers import BuildingSerializer, CrimesSerializer, CrimeStatSerializer
+from .serializers import BuildingSerializer, CrimesSerializer, CrimeStatSerializer, CrimeStatListSerializer
 from .models import Building, Crimes, CrimeStat
 
 
@@ -102,4 +102,4 @@ def get_crimes_grid(request):
     #     line = line.replace('(id, ', '(')
     #     line = regex.sub('(', line)
     #     cursor.execute(line)
-    return Response(CrimeStatSerializer(CrimeStat.objects.all()).data, status.HTTP_200_OK)
+    return Response(CrimeStatListSerializer({'stats': list(CrimeStat.objects.all())}).data, status.HTTP_200_OK)

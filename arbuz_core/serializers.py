@@ -46,6 +46,14 @@ class BuildingSerializer(serializers.ModelSerializer):
 
 
 class CrimeStatSerializer(serializers.Serializer):
+    longitude = serializers.DecimalField(max_digits=19, decimal_places=15)
+    latitude = serializers.DecimalField(max_digits=19, decimal_places=15)
+    crimes_coefficient = serializers.FloatField()
+
     class Meta:
         model = CrimeStat
         fields = ('longitude', 'latitude', 'crimes_coefficient')
+
+
+class CrimeStatListSerializer(serializers.Serializer):
+    stats = serializers.ListField(child=CrimeStatSerializer())

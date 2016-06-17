@@ -5,11 +5,13 @@ from django.core.management import BaseCommand
 
 from arbuz_core.models import Building, CrimeStat
 from django.db.models import Min, Max, Count
-from arbuz_core.serializers import DecimalEncoder
 
 
 class Command(BaseCommand):
-    def handle(self):
+    def handle(self, *args, **options):
+        print 'Update crime stats job has been started'
+        CrimeStat.objects.all().delete()
+        print 'Removed old data'
         bound_buildings = Building.objects.aggregate(Count('id'), Min('longitude'), Min('latitude'),
                                                      Max('longitude'), Max('latitude'))
         buildings_count = bound_buildings['id__count']
@@ -46,3 +48,4 @@ class Command(BaseCommand):
                     latitude=center_coords[1],
                     crimes_coefficient=crimes_count
                 )
+    print 'Update crime stats is done'

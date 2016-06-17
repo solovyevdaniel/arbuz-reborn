@@ -109,3 +109,4 @@ class CrimeStat(models.Model):
     longitude = models.DecimalField(max_digits=19, decimal_places=15)
     latitude = models.DecimalField(max_digits=19, decimal_places=15)
     crimes_coefficient = models.FloatField()
+    # custom_data = models.CharField(max_length=64, null=True)
