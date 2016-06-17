@@ -1,5 +1,8 @@
+import decimal
+import json
+
 from rest_framework import serializers
-from .models import Building, Crimes
+from .models import Building, Crimes, CrimeStat
 
 
 class CrimesSerializer(serializers.ModelSerializer):
@@ -40,3 +43,9 @@ class BuildingSerializer(serializers.ModelSerializer):
                   'number',
                   'street',
                   'crimes')
+
+
+class CrimeStatSerializer(serializers.Serializer):
+    class Meta:
+        model = CrimeStat
+        fields = ('longitude', 'latitude', 'crimes_coefficient')

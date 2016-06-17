@@ -73,7 +73,6 @@ class AdminUserManager(BaseUserManager):
 
 
 class AdminUser(AbstractBaseUser):
-    id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=256, null=False, default='')
     last_name = models.CharField(max_length=256, null=False, default='')
     user_email = models.EmailField(unique=True, null=False, default='')
@@ -104,3 +103,9 @@ class AdminUser(AbstractBaseUser):
 
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name + ' ' + self.middle_name
+
+
+class CrimeStat(models.Model):
+    longitude = models.DecimalField(max_digits=19, decimal_places=15)
+    latitude = models.DecimalField(max_digits=19, decimal_places=15)
+    crimes_coefficient = models.FloatField()
