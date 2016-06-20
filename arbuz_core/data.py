@@ -3,8 +3,8 @@ from arbuz_core.models import Building, Crimes
 from datetime import datetime
 
 
-# file_path = './Data/01m_2013/data_01_2013_part2.json'
-file_path = ''
+file_path = './Data/01m_2013/data_01_2013_part4.json'
+# file_path = ''
 
 def read_from_file():
     with open(file_path) as f:

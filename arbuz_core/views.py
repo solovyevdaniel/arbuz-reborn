@@ -6,20 +6,22 @@ from email.header import Header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import render_to_response
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-
+from .forms import UploadFileForm
+from Data.parse_data import parse_data_from_file
 from .data import read_from_file
 from .serializers import BuildingSerializer, CrimesSerializer
 from .models import Building, Crimes
 
 
 class BuildingListView(ListAPIView):
-    queryset = Building.objects.exclude(crimes__total=0)
+    queryset = Building.objects.exclude(crimes__total=0).exclude(crimes__total_points=0)
     # queryset = Crimes.objects.exclude(total=0).select_related('building_id')
     serializer_class = BuildingSerializer
 
@@ -90,12 +92,30 @@ def send_letter(request):
 def get_send_letter_form(request):
     return render(request, 'send_letter.html')
 
-def dump(request):
-    # read_from_file()
-    response = Building.objects.all()
 
-    return render_to_response('main.html', {'response': response})
+def dump(request):
+    read_from_file()
+    print('OKey')
+    response = Building.objects.all()
+    return Response()
 
 
 def index_view(request):
     return render_to_response('index.html')
+
+
+@api_view(['GET'])
+def get_parse_data_form(request):
+    return render(request, 'parse_data.html')
+
+@api_view(['POST'])
+def parse_data(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_multipart():
+            parse_data_from_file(request.FILES['file'])
+            return HttpResponseRedirect('/admin/')
+    else:
+        form = UploadFileForm()
+    # return render(request, 'parse_data.html', {'form': form})
+    return redirect('/admin/parse_data')

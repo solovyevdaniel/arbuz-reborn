@@ -15,7 +15,7 @@ counter = 0
 for i in range(2, sheet.nrows):
     list = OrderedDict()
     counter += 1
-    print counter
+    print(counter)
 
     row_values = sheet.row_values(i)
 

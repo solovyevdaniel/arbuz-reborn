@@ -18,7 +18,6 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from arbuz_core import views
-from arbuz_core import urls as core_urls
 
 admin.site = AdminSitePlus()
 admin.sites.site = admin.site
@@ -26,6 +25,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^admin/send_letter/', views.send_letter),
+    url(r'^admin/parse_data/', views.parse_data),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include('arbuz_core.urls')),

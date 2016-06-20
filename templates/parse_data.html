@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parse data</title>
+</head>
+<body>
+    <form action="parse_data/"
+          enctype="multipart/form-data"
+          method="post">
+        {% csrf_token %}
+        <p>Parse data from .xls file:
+            <label>
+                <input name="file" type="file"/>
+            </label>
+        </p>
+        <input value="Start parsing" type="submit" />
+    </form>
+</body>
+</html>

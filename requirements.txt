@@ -6,3 +6,6 @@ requests>=2.10.0
 xlrd>=0.9.4
 django-adminplus>=0.5
 psycopg2>=2.6.1
+numpy>=1.11.0
+pandas>=0.18.1
+django-excel>=0.0.4

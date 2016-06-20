@@ -12,3 +12,4 @@ admin.site.register(Crimes)
 admin.site.register(AdminUser)
 
 admin.site.register_view('send_letter', 'Send letter', view=views.get_send_letter_form)
+admin.site.register_view('parse_data', 'Parse data from .xls', view=views.get_parse_data_form)
